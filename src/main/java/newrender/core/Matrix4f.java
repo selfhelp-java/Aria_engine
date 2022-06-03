@@ -97,5 +97,80 @@ public class Matrix4f
     return this;
   }
 
-  
+  public Matrix4f InitRotation(Vector3f forward, Vector3f up)
+  {
+    Vector3f f = forward.Normalized();
+
+    Vector3f r = up.Normalized();
+    r = r.Cross(f);
+
+    Vector3f u = f.Cross(r);
+
+    return InitRotation(f, u, r);
+  }
+
+  public Matrix4f InitRotation(Vector3f forward, Vector3f up, Vector3f right)
+  {
+    Vector3f f = forward;
+    Vector3f r = right;
+    Vector3f u = up;
+
+    m[0][0] = r.GetX();	m[0][1] = r.GetY();	m[0][2] = r.GetZ();	m[0][3] = 0;
+    m[1][0] = u.GetX();	m[1][1] = u.GetY();	m[1][2] = u.GetZ();	m[1][3] = 0;
+    m[2][0] = f.GetX();	m[2][1] = f.GetY();	m[2][2] = f.GetZ();	m[2][3] = 0;
+    m[3][0] = 0;		m[3][1] = 0;		m[3][2] = 0;		m[3][3] = 1;
+
+    return this;
+  }
+
+  public Vector3f Transform(Vector3f r)
+  {
+    return new Vector3f(m[0][0] * r.GetX() + m[0][1] * r.GetY() + m[0][2] * r.GetZ() + m[0][3],
+      m[1][0] * r.GetX() + m[1][1] * r.GetY() + m[1][2] * r.GetZ() + m[1][3],
+      m[2][0] * r.GetX() + m[2][1] * r.GetY() + m[2][2] * r.GetZ() + m[2][3]);
+  }
+
+  public Matrix4f Mul(Matrix4f r)
+  {
+    Matrix4f res = new Matrix4f();
+
+    for(int i = 0; i < 4; i++)
+    {
+      for(int j = 0; j < 4; j++)
+      {
+        res.Set(i, j, m[i][0] * r.Get(0, j) +
+          m[i][1] * r.Get(1, j) +
+          m[i][2] * r.Get(2, j) +
+          m[i][3] * r.Get(3, j));
+      }
+    }
+
+    return res;
+  }
+
+  public float[][] GetM()
+  {
+    float[][] res = new float[4][4];
+
+    for(int i = 0; i < 4; i++)
+      for(int j = 0; j < 4; j++)
+        res[i][j] = m[i][j];
+
+    return res;
+  }
+
+  public float Get(int x, int y)
+  {
+    return m[x][y];
+  }
+
+  public void SetM(float[][] m)
+  {
+    this.m = m;
+  }
+
+  public void Set(int x, int y, float value)
+  {
+    m[x][y] = value;
+  }
 }
