@@ -1,3 +1,4 @@
+/*
 package newrender.core;
 
 public class Quaternion
@@ -254,3 +255,4 @@ public class Quaternion
     return m_x == r.GetX() && m_y == r.GetY() && m_z == r.GetZ() && m_w == r.GetW();
   }
 }
+*/

@@ -1,3 +1,4 @@
+/*
 package components;
 
 import editor.JImGui;
@@ -148,3 +149,4 @@ public abstract class Component {
         ID_COUNTER = maxId;
     }
 }
+*/

@@ -1,3 +1,4 @@
+/*
 package newrender.core;
 
 import java.nio.ByteBuffer;
@@ -95,3 +96,4 @@ public class Util
 		return result;
 	}
 }
+*/

@@ -1,3 +1,4 @@
+/*
 package components;
 
 import com.google.gson.*;
@@ -29,3 +30,4 @@ public class ComponentDeserializer implements JsonSerializer<Component>,
         return result;
     }
 }
+*/

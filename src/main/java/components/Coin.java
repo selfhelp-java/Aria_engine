@@ -1,3 +1,4 @@
+/*
 package components;
 
 import jade.GameObject;
@@ -36,3 +37,4 @@ public class Coin extends Component {
         }
     }
 }
+*/

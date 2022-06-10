@@ -1,3 +1,4 @@
+/*
 package components;
 
 import jade.GameObject;
@@ -55,3 +56,4 @@ public abstract class Block extends Component {
 
     abstract void playerHit(PlayerController playerController);
 }
+*/

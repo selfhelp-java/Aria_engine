@@ -1,4 +1,4 @@
-package components;
+/*package components;
 
 import util.AssetPool;
 
@@ -54,4 +54,4 @@ public class AnimationState {
 
         return defaultSprite;
     }
-}
+}*/

@@ -1,3 +1,4 @@
+/*
 package components;
 
 import org.joml.Vector2f;
@@ -23,3 +24,4 @@ public class BlockCoin extends Component {
          }
      }
 }
+*/
