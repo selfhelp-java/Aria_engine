@@ -3,6 +3,7 @@ package base;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL20;
+import renderer.Shader;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -51,7 +52,9 @@ public class LevelEditorScene extends Scene {
     };
 
     private int vaoID, vboID, eboID;
+    private Shader defaultshader;
     public LevelEditorScene() {
+        Shader testShader = new Shader("assets/shaders/default.glsl");
     }
 
     /**
@@ -59,6 +62,8 @@ public class LevelEditorScene extends Scene {
      */
     @Override
     public void init(){
+        defaultshader = new Shader("assets/shaders/default.glsl");
+        defaultshader.compile();
         //加载并编译vertexshader
         vertexID = glCreateShader(GL_VERTEX_SHADER);
         //将shader传递到GPU
@@ -132,7 +137,7 @@ public class LevelEditorScene extends Scene {
 
     @Override
     public void update(float dt) {
-            glUseProgram(shaderProgram);
+            defaultshader.use();
             glBindVertexArray(vaoID);
             glEnableVertexAttribArray(0);
             glEnableVertexAttribArray(1);
@@ -144,7 +149,7 @@ public class LevelEditorScene extends Scene {
             glDisableVertexAttribArray(1);
 
             glBindVertexArray(0);
-            glUseProgram(0);
+            defaultshader.detach();
 
 
     }
