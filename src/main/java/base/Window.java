@@ -32,15 +32,21 @@ public class Window {
         this.a = 1;
     }
 
+    /**
+     * 切换场景
+     * @param newScene
+     */
     public static void changeScene(int newScene){
         switch(newScene){
             case 0 :
                 currentScene = new LevelEditorScene();
                 currentScene.init();
+                currentScene.start();
                 break;
             case 1 :
                 currentScene = new LevelScene();
                 currentScene.init();
+                currentScene.start();
                 break;
             default:
                 assert false : "unknown scene";

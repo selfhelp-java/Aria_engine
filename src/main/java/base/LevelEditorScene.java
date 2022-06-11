@@ -2,6 +2,7 @@ package base;
 
 
 import Util.Time;
+import components.SpriteRenderer;
 import org.joml.Vector2f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL20;
@@ -57,6 +58,9 @@ public class LevelEditorScene extends Scene {
     private int vaoID, vboID, eboID;
     private Shader defaultShader;
     private Texture testTexture;
+
+    GameObject testObj;
+
     public LevelEditorScene() {
         Shader testShader = new Shader("assets/shaders/default.glsl");
     }
@@ -66,50 +70,15 @@ public class LevelEditorScene extends Scene {
      */
     @Override
     public void init(){
+        System.out.println("creating");
+        this.testObj = new GameObject("test obj");
+        this.testObj.addComponent(new SpriteRenderer());
+        this.addGameObjectToScene(this.testObj);
         this.camera = new Camera(new Vector2f(-200, -300));
         defaultShader = new Shader("assets/shaders/default.glsl");
         defaultShader.compile();
         this.testTexture = new Texture("assets/images/testImage.png");
-        //加载并编译vertexshader
-        vertexID = glCreateShader(GL_VERTEX_SHADER);
-        //将shader传递到GPU
-        glShaderSource(vertexID, vertexShaderSrc);
-        glCompileShader(vertexID);
 
-        int success = glGetShaderi(vertexID, GL_COMPILE_STATUS);
-        if(success == GL_FALSE) {
-            int len = glGetShaderi(vertexID, GL_INFO_LOG_LENGTH);
-            System.out.println("ERRPR:\n\tfail");
-            System.out.println(glGetShaderInfoLog(vertexID, len));
-            assert false : "";
-        }
-
-        fragmentID = glCreateShader(GL_FRAGMENT_SHADER);
-        //将shader传递到GPU
-        glShaderSource(fragmentID, fragmentShaderSrc);
-        glCompileShader(fragmentID);
-
-        success = glGetShaderi(fragmentID, GL_COMPILE_STATUS);
-        if(success == GL_FALSE) {
-            int len = glGetShaderi(fragmentID, GL_INFO_LOG_LENGTH);
-            System.out.println("ERRPR:\n\tfail");
-            System.out.println(glGetShaderInfoLog(fragmentID, len));
-            assert false : "";
-        }
-
-        //link shaders and check for errors
-        shaderProgram = glCreateProgram();
-        glAttachShader(shaderProgram, vertexID);
-        glAttachShader(shaderProgram, fragmentID);
-        glLinkProgram(shaderProgram);
-
-        success = glGetProgrami(shaderProgram, GL_LINK_STATUS);
-        if(success == GL_FALSE){
-            int len = glGetProgrami(shaderProgram, GL_INFO_LOG_LENGTH);
-            System.out.println("ERRPR:\n\tfail");
-            System.out.println(glGetProgramInfoLog(shaderProgram, len));
-            assert false : "";
-        }
 
         //生成VAO,VBO,EBO
         vaoID = glGenVertexArrays();
@@ -166,6 +135,10 @@ public class LevelEditorScene extends Scene {
 
             glBindVertexArray(0);
             defaultShader.detach();
+
+            for(GameObject go : this.gameObjects){
+                go.update(dt);
+            }
 
 
     }
