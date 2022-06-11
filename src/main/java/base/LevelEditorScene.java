@@ -1,6 +1,7 @@
 package base;
 
 
+import Util.Time;
 import org.joml.Vector2f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL20;
@@ -142,6 +143,7 @@ public class LevelEditorScene extends Scene {
             defaultshader.use();
             defaultshader.uploadMat4f("uProjection", camera.getProjectionMatrix());
             defaultshader.uploadMat4f("uView", camera.getViewMatrix());
+            defaultshader.uploadFloat("uTime", Time.getTime());
             glBindVertexArray(vaoID);
             glEnableVertexAttribArray(0);
             glEnableVertexAttribArray(1);

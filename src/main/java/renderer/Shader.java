@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import org.joml.Matrix3f;
 import org.joml.Matrix4f;
+import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL20;
 import renderer.Shader;
@@ -19,7 +21,7 @@ import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 public class Shader {
 
     private int shaderProgramID;
-
+    private boolean beingUsed = false;
     private String vertexSource;
     private String fragmentSource;
     private String filepath;
@@ -115,16 +117,21 @@ public class Shader {
         }
     }
 
-    public void use(){
-        glUseProgram(shaderProgramID);
+    public void use() {
+        if (!beingUsed) {
+            // Bind shader program
+            glUseProgram(shaderProgramID);
+            beingUsed = true;
+        }
     }
 
-    public void detach(){
+    public void detach() {
         glUseProgram(0);
+        beingUsed = false;
     }
 
     /**
-     * 上传摄像头矩阵
+     * 上传矩阵
      * @param varName
      * @param mat4
      */
@@ -136,4 +143,29 @@ public class Shader {
         glUniformMatrix4fv(varLocation, false, matBuffer);
     }
 
+    public void uploadMat3f(String varName, Matrix3f mat3) {
+        int varLocation = glGetUniformLocation(shaderProgramID, varName);
+        use();
+        FloatBuffer matBuffer = BufferUtils.createFloatBuffer(9);
+        mat3.get(matBuffer);
+        glUniformMatrix3fv(varLocation, false, matBuffer);
+    }
+
+    public void uploadVec4f(String varName, Vector4f vec) {
+        int varLocation = glGetUniformLocation(shaderProgramID, varName);
+        use();
+        glUniform4f(varLocation, vec.x, vec.y, vec.z, vec.w);
+    }
+
+    public void uploadFloat(String varName, float val) {
+        int varLocation = glGetUniformLocation(shaderProgramID, varName);
+        use();
+        glUniform1f(varLocation, val);
+    }
+
+    public void uploadInt(String varName, int val) {
+        int varLocation = glGetUniformLocation(shaderProgramID, varName);
+        use();
+        glUniform1i(varLocation, val);
+    }
 }
