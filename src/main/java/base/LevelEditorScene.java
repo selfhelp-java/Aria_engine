@@ -1,6 +1,7 @@
 package base;
 
 
+import org.joml.Vector2f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL20;
 import renderer.Shader;
@@ -41,10 +42,10 @@ public class LevelEditorScene extends Scene {
 
     private  float[] vertexArray ={
             //position              //color
-             0.5f, -0.5f, 0.0f,     1.0f, 0.0f, 0.0f, 1.0f,
-            -0.5f,  0.5f, 0.0f,     0.0f, 1.0f, 0.0f, 1.0f,
-             0.5f,  0.5f, 0.0f,     0.0f, 0.0f, 1.0f, 1.0f,
-            -0.5f, -0.5f, 0.0f,     1.0f, 1.0f, 0.0f, 1.0f,
+             50.5f, -50.5f, 0.0f,     1.0f, 0.0f, 0.0f, 1.0f,
+            -50.5f,  50.5f, 0.0f,     0.0f, 1.0f, 0.0f, 1.0f,
+             50.5f,  50.5f, 0.0f,     0.0f, 0.0f, 1.0f, 1.0f,
+            -50.5f, -50.5f, 0.0f,     1.0f, 1.0f, 0.0f, 1.0f,
     };
     private  int[] elementArray ={
             2,1,0,
@@ -62,6 +63,7 @@ public class LevelEditorScene extends Scene {
      */
     @Override
     public void init(){
+        this.camera = new Camera(new Vector2f());
         defaultshader = new Shader("assets/shaders/default.glsl");
         defaultshader.compile();
         //º”‘ÿ≤¢±‡“Îvertexshader
@@ -138,6 +140,8 @@ public class LevelEditorScene extends Scene {
     @Override
     public void update(float dt) {
             defaultshader.use();
+            defaultshader.uploadMat4f("uProjection", camera.getProjectionMatrix());
+            defaultshader.uploadMat4f("uView", camera.getViewMatrix());
             glBindVertexArray(vaoID);
             glEnableVertexAttribArray(0);
             glEnableVertexAttribArray(1);
