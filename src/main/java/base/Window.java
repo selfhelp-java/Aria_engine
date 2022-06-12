@@ -65,6 +65,9 @@ public class Window {
         return Window.window;
     }
 
+    public static Scene getScene(){
+        return get().currentScene;
+    }
     /**
      * 窗口运行函数
      * 包含一个初始化方法和循环方法

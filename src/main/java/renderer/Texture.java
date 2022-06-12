@@ -17,6 +17,10 @@ public class Texture {
     private transient int texID;
     private int width, height;
 
+    /**
+     * 纹理初始化操作
+     * @param filepath
+     */
     public Texture(String filepath) {
         this.filepath = filepath;
 
