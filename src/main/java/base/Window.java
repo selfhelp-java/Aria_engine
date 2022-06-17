@@ -1,6 +1,5 @@
 package base;
 
-import Util.Time;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
@@ -131,8 +130,8 @@ public class Window {
      * 循环方法，控制每次渲染时的设置
      */
     public void loop(){
-        float beginTime = Time.getTime();
-        float endTime = Time.getTime();
+        float beginTime = (float)glfwGetTime();
+        float endTime = (float)glfwGetTime();
         float dt = -1.0f;
         while (!glfwWindowShouldClose(glfwWindow)) {
             // 事件池
@@ -146,7 +145,7 @@ public class Window {
             glfwSwapBuffers(glfwWindow);
 
             //一次loop的时间
-            endTime = Time.getTime();
+            endTime = (float)glfwGetTime();
             dt = endTime - beginTime;
             beginTime = endTime;
         }

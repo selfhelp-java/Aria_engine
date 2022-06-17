@@ -18,6 +18,10 @@ import java.nio.IntBuffer;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
+
+/**
+ * shaderの所有操作都在这里，
+ */
 public class Shader {
 
     private int shaderProgramID;
@@ -63,6 +67,9 @@ public class Shader {
 
     }
 
+    /**
+     * 把glsl语言编译
+     */
     public void compile(){
         // ============================================================
         // Compile and link shaders
@@ -115,6 +122,9 @@ public class Shader {
         }
     }
 
+    /**
+     * 使用shader
+     */
     public void use() {
         if (!beingUsed) {
             // Bind shader program
@@ -123,13 +133,16 @@ public class Shader {
         }
     }
 
+    /**
+     * 解绑shader
+     */
     public void detach() {
         glUseProgram(0);
         beingUsed = false;
     }
 
     /**
-     * 上传矩阵
+     * 一系列的上传函数
      * @param varName
      * @param mat4
      */
@@ -171,5 +184,11 @@ public class Shader {
         int varLocation = glGetUniformLocation(shaderProgramID, varName);
         use();
         glUniform1i(varLocation, slot);
+    }
+
+    public void uploadIntArray(String varName, int[] array) {
+        int varLocation = glGetUniformLocation(shaderProgramID, varName);
+        use();
+        glUniform1iv(varLocation, array);
     }
 }

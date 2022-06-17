@@ -1,5 +1,6 @@
 package base;
 
+import components.Spritesheet;
 import renderer.Shader;
 import renderer.Texture;
 
@@ -13,6 +14,8 @@ import java.util.Map;
 public class AssetPool {
     private static Map<String, Shader> shaders = new HashMap<>();
     private static Map<String, Texture> textures = new HashMap<>();
+    private static Map<String, Spritesheet> spritesheets = new HashMap<>();
+
 
     /**
      * 获得资源池的shader，如果没有就将其加入资源池中
@@ -46,4 +49,30 @@ public class AssetPool {
             return texture;
         }
     }
+
+    /**
+     * 向资源池中加入spritesheet
+     * @param resourceName
+     * @param spritesheet
+     */
+    public static void addSpritesheet(String resourceName, Spritesheet spritesheet) {
+        File file = new File(resourceName);
+        if (!AssetPool.spritesheets.containsKey(file.getAbsolutePath())) {
+            AssetPool.spritesheets.put(file.getAbsolutePath(), spritesheet);
+        }
+    }
+
+    /**
+     * 获得资源池中的spritesheet
+     * @param resourceName
+     * @return
+     */
+    public static Spritesheet getSpritesheet(String resourceName) {
+        File file = new File(resourceName);
+        if (!AssetPool.spritesheets.containsKey(file.getAbsolutePath())) {
+            assert false : "Error: Tried to access spritesheet '" + resourceName + "' and it has not been added to asset pool.";
+        }
+        return AssetPool.spritesheets.getOrDefault(file.getAbsolutePath(), null);
+    }
+
 }
