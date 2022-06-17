@@ -19,6 +19,7 @@ public class Window {
     //使用private static控制始终只有一个窗口对象
     private static Window window = null;
     private long glfwWindow;
+    private ImGuiLayer imguilayer;
     public float r,g,b,a;
     private static  Scene currentScene;
     private Window(){
@@ -113,6 +114,10 @@ public class Window {
         glfwSetMouseButtonCallback(glfwWindow, MouseListener::mouseButtonCallback);
         glfwSetScrollCallback(glfwWindow, MouseListener::mouseScrollCallback);
         glfwSetKeyCallback(glfwWindow, KeyListener::keyCallback);
+        glfwSetWindowSizeCallback(glfwWindow, (w, newWidth, newHeight) -> {
+            Window.setWidth(newWidth);
+            Window.setHeight(newHeight);
+        });
         // 将新建的窗口设置为opengl当前的上下文窗口
         glfwMakeContextCurrent(glfwWindow);
         // Enable v-sync
@@ -124,7 +129,8 @@ public class Window {
         GL.createCapabilities();
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-
+        this.imguilayer = new ImGuiLayer(glfwWindow);
+        this.imguilayer.initImGui();
 
         Window.changeScene(0);
 
@@ -146,6 +152,7 @@ public class Window {
             if(dt>=0) {
                 currentScene.update(dt);
             }
+            this.imguilayer.update(dt);
             glfwSwapBuffers(glfwWindow);
 
             //一次loop的时间
@@ -155,5 +162,22 @@ public class Window {
         }
 
     }
+
+    public static int getWidth() {
+        return  get().width;
+    }
+
+    public static int getHeight() {
+        return get().height;
+    }
+
+    public static void setWidth(int newWidth) {
+        get().width = newWidth;
+    }
+
+    public static void setHeight(int newHeight) {
+        get().height = newHeight;
+    }
+
 
 }
