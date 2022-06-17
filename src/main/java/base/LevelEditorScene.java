@@ -8,7 +8,7 @@ import org.joml.Vector4f;
 
 public class LevelEditorScene extends Scene {
 
-
+    private GameObject obj1;
     public LevelEditorScene() {
 
     }
@@ -24,9 +24,9 @@ public class LevelEditorScene extends Scene {
         Spritesheet sprites = AssetPool.getSpritesheet("assets/images/spritesheet.png");
 
 
-        GameObject obj = new GameObject("obj1", new Transform(new Vector2f(100,100), new Vector2f(256, 256)));
-        obj.addComponent(new SpriteRenderer(sprites.getSprite(0)));
-        this.addGameObjectToScene(obj);
+        obj1 = new GameObject("obj1", new Transform(new Vector2f(100,100), new Vector2f(256, 256)));
+        obj1.addComponent(new SpriteRenderer(sprites.getSprite(0)));
+        this.addGameObjectToScene(obj1);
         loadResources();
 
         GameObject obj2 = new GameObject("obj1", new Transform(new Vector2f(400,100), new Vector2f(256, 256)));
@@ -40,10 +40,19 @@ public class LevelEditorScene extends Scene {
         AssetPool.getShader("assets/shaders/default.glsl");
         AssetPool.addSpritesheet("assets/images/spritesheet.png",new Spritesheet(AssetPool.getTexture("assets/images/spritesheet.png"),16,16,26,0));
     }
+
+    private int spriteindex = 0;
+    private float spriteFlipTime = 0.2f;
+    private float spriteFlipTimeLeft = 0.0f;
     @Override
     public void update(float dt) {
-
-
+            if(spriteFlipTimeLeft <= 0){
+                spriteFlipTime = spriteFlipTimeLeft;
+                spriteindex++;
+                if(spriteindex>4){
+                    spriteindex = 0;
+                }
+            }
             for(GameObject go : this.gameObjects){
                 go.update(dt);
             }
