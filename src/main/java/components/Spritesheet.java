@@ -11,6 +11,7 @@ import java.util.List;
  */
 public class Spritesheet {
     private Texture texture;
+    //sprites用以存放所有的小纹理
     private List<Sprite> sprites;
 
     /**

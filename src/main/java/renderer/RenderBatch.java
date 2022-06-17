@@ -17,7 +17,7 @@ import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 /**
  * 实现batch rendering
  */
-public class RenderBatch {
+public class RenderBatch implements Comparable<RenderBatch> {
     // Vertex
     // ======
     // Pos               Color                         tex coords     tex id
@@ -47,7 +47,11 @@ public class RenderBatch {
 
     private Shader shader;
 
-    public RenderBatch(int maxBatchSize){
+    //控制alpha blending时的混合
+    private int zIndex;
+
+    public RenderBatch(int maxBatchSize, int zIndex){
+        this.zIndex = zIndex;
         shader = AssetPool.getShader("assets/shaders/default.glsl");
         this.sprites = new SpriteRenderer[maxBatchSize];
         this.maxBatchSize = maxBatchSize;
@@ -262,9 +266,20 @@ public class RenderBatch {
         return this.textures.contains(tex);
     }
 
+    public int zIndex() {
+        return this.zIndex;
+    }
 
 
-
+    /**
+     * 对batch的z深度进行比较
+     * @param o
+     * @return
+     */
+    @Override
+    public int compareTo(RenderBatch o) {
+        return Integer.compare(this.zIndex, o.zIndex());
+    }
 }
 
 
