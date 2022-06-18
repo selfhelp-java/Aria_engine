@@ -9,21 +9,20 @@ import java.util.List;
  * go¿‡
  */
 public class GameObject {
+    private static int ID_COUNTER = 0;
+    private int uid = -1;
     public String name;
     private List<Component> components;
     public Transform transform;
     private int zIndex;
-    public GameObject(String name) {
-        this.name = name;
-        this.components = new ArrayList<>();
-        this.transform = new Transform();
-    }
+
 
     public GameObject(String name, Transform transform, int zIndex) {
         this.name = name;
         this.zIndex = zIndex;
         this.components = new ArrayList<>();
         this.transform = transform;
+        this.uid = ID_COUNTER++;
     }
 
     /**
@@ -67,8 +66,13 @@ public class GameObject {
      * @param c
      */
     public void addComponent(Component c) {
+        c.generateId();
         this.components.add(c);
         c.gameObject = this;
+    }
+
+    public List<Component> getAllComponents() {
+        return this.components;
     }
 
     /**
@@ -102,5 +106,13 @@ public class GameObject {
         for (Component c : components) {
                 c.imgui();
         }
+    }
+
+    public int uid() {
+        return this.uid;
+    }
+
+    public static void init(int maxId) {
+        ID_COUNTER = maxId;
     }
 }

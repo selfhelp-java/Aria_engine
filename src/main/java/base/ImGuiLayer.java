@@ -16,17 +16,19 @@ import static org.lwjgl.glfw.GLFW.*;
  * ¹¹½¨gui
  */
 public class ImGuiLayer {
+
     private long glfwWindow;
-    // Initialize Dear ImGui.
 
     // Mouse cursors provided by GLFW
     private final long[] mouseCursors = new long[ImGuiMouseCursor.COUNT];
 
     // LWJGL3 renderer (SHOULD be initialized)
     private final ImGuiImplGl3 imGuiGl3 = new ImGuiImplGl3();
+
     public ImGuiLayer(long glfwWindow) {
         this.glfwWindow = glfwWindow;
     }
+
     // Initialize Dear ImGui.
     public void initImGui() {
         // IMPORTANT!!
@@ -37,7 +39,7 @@ public class ImGuiLayer {
         // Initialize ImGuiIO config
         final ImGuiIO io = ImGui.getIO();
 
-        io.setIniFilename("ini"); // We don't want to save .ini file
+        io.setIniFilename("imgui.ini"); // We don't want to save .ini file
         io.setConfigFlags(ImGuiConfigFlags.NavEnableKeyboard); // Navigation with keyboard
         io.setBackendFlags(ImGuiBackendFlags.HasMouseCursors); // Mouse cursors to display while resizing windows etc.
         io.setBackendPlatformName("imgui_java_impl_glfw");
@@ -95,6 +97,10 @@ public class ImGuiLayer {
             io.setKeyShift(io.getKeysDown(GLFW_KEY_LEFT_SHIFT) || io.getKeysDown(GLFW_KEY_RIGHT_SHIFT));
             io.setKeyAlt(io.getKeysDown(GLFW_KEY_LEFT_ALT) || io.getKeysDown(GLFW_KEY_RIGHT_ALT));
             io.setKeySuper(io.getKeysDown(GLFW_KEY_LEFT_SUPER) || io.getKeysDown(GLFW_KEY_RIGHT_SUPER));
+
+            if (!io.getWantCaptureKeyboard()) {
+                KeyListener.keyCallback(w, key, scancode, action, mods);
+            }
         });
 
         glfwSetCharCallback(glfwWindow, (w, c) -> {
@@ -116,6 +122,10 @@ public class ImGuiLayer {
 
             if (!io.getWantCaptureMouse() && mouseDown[1]) {
                 ImGui.setWindowFocus(null);
+            }
+
+            if (!io.getWantCaptureMouse()) {
+                MouseListener.mouseButtonCallback(w, button, action, mods);
             }
         });
 
@@ -155,14 +165,15 @@ public class ImGuiLayer {
 
         // Fonts merge example
         fontConfig.setPixelSnapH(true);
-        fontAtlas.addFontFromFileTTF("assets/fonts/ERASDEMI.TTF", 20, fontConfig);
-
-
-
+        fontAtlas.addFontFromFileTTF("assets/fonts/ERASDEMI.TTF", 16, fontConfig);
 
         fontConfig.destroy(); // After all fonts were added we don't need this config more
 
 
+
+        // Method initializes LWJGL3 renderer.
+        // This method SHOULD be called after you've initialized your ImGui configuration (fonts and so on).
+        // ImGui context should be created as well.
         imGuiGl3.init("#version 330 core");
     }
 
@@ -179,16 +190,17 @@ public class ImGuiLayer {
     }
 
     private void startFrame(final float deltaTime) {
+        // Get window properties and mouse position
         float[] winWidth = {Window.getWidth()};
         float[] winHeight = {Window.getHeight()};
-        double[] mousePosX={0};
-        double[] mousePosY={0};
+        double[] mousePosX = {0};
+        double[] mousePosY = {0};
         glfwGetCursorPos(glfwWindow, mousePosX, mousePosY);
 
         // We SHOULD call those methods to update Dear ImGui state for the current frame
         final ImGuiIO io = ImGui.getIO();
         io.setDisplaySize(winWidth[0], winHeight[0]);
-        io.setDisplayFramebufferScale(1f,1f);
+        io.setDisplayFramebufferScale(1f, 1f);
         io.setMousePos((float) mousePosX[0], (float) mousePosY[0]);
         io.setDeltaTime(deltaTime);
 
@@ -202,7 +214,6 @@ public class ImGuiLayer {
         // After Dear ImGui prepared a draw data, we use it in the LWJGL3 renderer.
         // At that moment ImGui will be rendered to the current OpenGL context.
         imGuiGl3.renderDrawData(ImGui.getDrawData());
-
     }
 
     // If you want to clean a room after yourself - do it by yourself
@@ -210,5 +221,4 @@ public class ImGuiLayer {
         imGuiGl3.dispose();
         ImGui.destroyContext();
     }
-
 }

@@ -164,7 +164,7 @@ public class Window {
             dt = endTime - beginTime;
             beginTime = endTime;
         }
-        currentScene.saveExit();
+
     }
 
     public static int getWidth() {

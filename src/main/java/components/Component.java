@@ -14,6 +14,8 @@ public abstract class Component {
     public transient GameObject gameObject = null;
     public  void update(float dt){}
     public void start() {}
+    private static int ID_COUNTER = 0;
+    private int uid = -1;
 
     /**
      * 将变量暴露在gui下
@@ -116,4 +118,17 @@ public abstract class Component {
         return -1;
     }
 
+    public void generateId() {
+        if (this.uid == -1) {
+            this.uid = ID_COUNTER++;
+        }
+    }
+
+    public int uid() {
+        return this.uid;
+    }
+
+    public static void init(int maxId) {
+        ID_COUNTER = maxId;
+    }
 }
