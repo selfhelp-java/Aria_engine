@@ -2,6 +2,9 @@ package base;
 
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
+import scene.LevelEditorScene;
+import scene.LevelScene;
+import scene.Scene;
 
 import static java.sql.Types.NULL;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
@@ -21,7 +24,7 @@ public class Window {
     private long glfwWindow;
     private ImGuiLayer imguilayer;
     public float r,g,b,a;
-    private static  Scene currentScene;
+    private static Scene currentScene;
     private Window(){
         this.width = 1920;
         this.height = 1080;
@@ -40,18 +43,19 @@ public class Window {
         switch(newScene){
             case 0 :
                 currentScene = new LevelEditorScene();
-                currentScene.init();
-                currentScene.start();
+
                 break;
             case 1 :
                 currentScene = new LevelScene();
-                currentScene.init();
-                currentScene.start();
+
                 break;
             default:
                 assert false : "unknown scene";
                 break;
         }
+        currentScene.load();
+        currentScene.init();
+        currentScene.start();
     }
     /**
      * 获得当前窗口
@@ -152,7 +156,7 @@ public class Window {
             if(dt>=0) {
                 currentScene.update(dt);
             }
-            this.imguilayer.update(dt);
+            this.imguilayer.update(dt,currentScene);
             glfwSwapBuffers(glfwWindow);
 
             //一次loop的时间
@@ -160,7 +164,7 @@ public class Window {
             dt = endTime - beginTime;
             beginTime = endTime;
         }
-
+        currentScene.saveExit();
     }
 
     public static int getWidth() {

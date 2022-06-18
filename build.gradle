@@ -19,6 +19,8 @@ project.ext.jomlVersion = "1.10.4"
 project.ext.lwjglNatives = "natives-windows"
 
 dependencies {
+    //gson
+    implementation 'com.google.code.gson:gson:2.8.6'
     implementation fileTree('libs'){ include '*.jar'}
     implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
 

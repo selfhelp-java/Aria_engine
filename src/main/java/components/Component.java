@@ -1,11 +1,8 @@
-/*
 package components;
 
-import editor.JImGui;
+import base.GameObject;
 import imgui.ImGui;
 import imgui.type.ImInt;
-import jade.GameObject;
-import org.jbox2d.dynamics.contacts.Contact;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -14,40 +11,15 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
 public abstract class Component {
-    private static int ID_COUNTER = 0;
-    private int uid = -1;
-
     public transient GameObject gameObject = null;
+    public  void update(float dt){}
+    public void start() {}
 
-    public void start() {
-
-    }
-
-    public void update(float dt) {
-
-    }
-
-    public void editorUpdate(float dt) {
-
-    }
-
-    public void beginCollision(GameObject collidingObject, Contact contact, Vector2f hitNormal) {
-
-    }
-
-    public void endCollision(GameObject collidingObject, Contact contact, Vector2f hitNormal) {
-
-    }
-
-    public void preSolve(GameObject collidingObject, Contact contact, Vector2f hitNormal) {
-
-    }
-
-    public void postSolve(GameObject collidingObject, Contact contact, Vector2f hitNormal) {
-
-    }
-
+    /**
+     * 将变量暴露在gui下
+     */
     public void imgui() {
+
         try {
             Field[] fields = this.getClass().getDeclaredFields();
             for (Field field : fields) {
@@ -67,19 +39,22 @@ public abstract class Component {
 
                 if (type == int.class) {
                     int val = (int)value;
-                    field.set(this, JImGui.dragInt(name, val));
+                    int[] imInt = {val};
+                    if(ImGui.dragInt(name+": ",imInt)){
+                        field.set(this, imInt[0]);
+                    }
                 } else if (type == float.class) {
                     float val = (float)value;
-                    field.set(this, JImGui.dragFloat(name, val));
+                    float[] imFlaot = {val};
+                    if(ImGui.dragFloat(name+": ",imFlaot)){
+                        field.set(this, imFlaot[0]);
+                    }
                 } else if (type == boolean.class) {
                     boolean val = (boolean)value;
                     if (ImGui.checkbox(name + ": ", val)) {
                         field.set(this, !val);
                     }
-                } else if (type == Vector2f.class) {
-                    Vector2f val = (Vector2f)value;
-                    JImGui.drawVec2Control(name, val);
-                } else if (type == Vector3f.class) {
+                }  else if (type == Vector3f.class) {
                     Vector3f val = (Vector3f)value;
                     float[] imVec = {val.x, val.y, val.z};
                     if (ImGui.dragFloat3(name + ": ", imVec)) {
@@ -87,7 +62,10 @@ public abstract class Component {
                     }
                 } else if (type == Vector4f.class) {
                     Vector4f val = (Vector4f)value;
-                    JImGui.colorPicker4(name, val);
+                    float[] imVec = {val.x, val.y, val.z, val.w};
+                    if (ImGui.dragFloat4(name + ": ", imVec)) {
+                        val.set(imVec[0], imVec[1], imVec[2], imVec[3]);
+                    }
                 } else if (type.isEnum()) {
                     String[] enumValues = getEnumValues(type);
                     String enumType = ((Enum)value).name();
@@ -95,12 +73,7 @@ public abstract class Component {
                     if (ImGui.combo(field.getName(), index, enumValues, enumValues.length)) {
                         field.set(this, type.getEnumConstants()[index.get()]);
                     }
-                } else if (type == String.class) {
-                    field.set(this,
-                            JImGui.inputText(field.getName() + ": ",
-                                    (String)value));
                 }
-
 
                 if (isPrivate) {
                     field.setAccessible(false);
@@ -111,12 +84,12 @@ public abstract class Component {
         }
     }
 
-    public void generateId() {
-        if (this.uid == -1) {
-            this.uid = ID_COUNTER++;
-        }
-    }
-
+    /**
+     * 针对枚举的变量暴露方法
+     * @param enumType
+     * @param <T>
+     * @return
+     */
     private <T extends Enum<T>> String[] getEnumValues(Class<T> enumType) {
         String[] enumValues = new String[enumType.getEnumConstants().length];
         int i = 0;
@@ -127,6 +100,12 @@ public abstract class Component {
         return enumValues;
     }
 
+    /**
+     * 针对枚举的变量暴露方法
+     * @param str
+     * @param arr
+     * @return
+     */
     private int indexOf(String str, String[] arr) {
         for (int i=0; i < arr.length; i++) {
             if (str.equals(arr[i])) {
@@ -137,16 +116,4 @@ public abstract class Component {
         return -1;
     }
 
-    public void destroy() {
-
-    }
-
-    public int getUid() {
-        return this.uid;
-    }
-
-    public static void init(int maxId) {
-        ID_COUNTER = maxId;
-    }
 }
-*/

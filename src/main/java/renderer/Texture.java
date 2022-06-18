@@ -20,7 +20,9 @@ public class Texture {
      * 纹理初始化操作
      * @param filepath
      */
-    public Texture(String filepath) {
+
+
+    public void init(String filepath) {
         this.filepath = filepath;
 
         // Generate texture on GPU
@@ -90,6 +92,14 @@ public class Texture {
      */
     public int getHeight() {
         return this.height;
+    }
+
+    /**
+     * 获得当前texture的id
+     * @return
+     */
+    public int getId() {
+        return texID;
     }
 
 }

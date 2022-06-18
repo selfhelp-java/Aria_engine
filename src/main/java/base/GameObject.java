@@ -1,5 +1,7 @@
 package base;
 
+import components.Component;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -94,5 +96,11 @@ public class GameObject {
 
     public void setzIndex(int zIndex) {
         this.zIndex = zIndex;
+    }
+
+    public void imgui() {
+        for (Component c : components) {
+                c.imgui();
+        }
     }
 }
