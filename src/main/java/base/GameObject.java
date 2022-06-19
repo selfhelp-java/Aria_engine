@@ -71,9 +71,7 @@ public class GameObject {
         c.gameObject = this;
     }
 
-    public List<Component> getAllComponents() {
-        return this.components;
-    }
+
 
     /**
      * 所有的compo更新
@@ -108,11 +106,17 @@ public class GameObject {
         }
     }
 
-    public int uid() {
-        return this.uid;
-    }
-
     public static void init(int maxId) {
         ID_COUNTER = maxId;
     }
+
+    public int getUid() {
+        return this.uid;
+    }
+
+    public List<Component> getAllComponents() {
+        return this.components;
+    }
+
+
 }

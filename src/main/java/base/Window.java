@@ -2,6 +2,7 @@ package base;
 
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
+import renderer.DebugDraw;
 import scene.LevelEditorScene;
 import scene.LevelScene;
 import scene.Scene;
@@ -151,9 +152,12 @@ public class Window {
             // 事件池
             glfwPollEvents();
 
+            DebugDraw.beginFrame();
+
             glClearColor(r, g, b, a);
             glClear(GL_COLOR_BUFFER_BIT);
             if(dt>=0) {
+                DebugDraw.draw();
                 currentScene.update(dt);
             }
             this.imguilayer.update(dt,currentScene);
