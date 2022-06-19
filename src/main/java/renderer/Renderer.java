@@ -15,6 +15,7 @@ public class Renderer  {
      * renderer->batches->batch->render
      */
     private List<RenderBatch> batches;
+    private static Shader currentShader;
 
     public Renderer() {
         this.batches = new ArrayList<>();
@@ -30,6 +31,22 @@ public class Renderer  {
         if (spr != null) {
             add(spr);
         }
+    }
+
+    /**
+     * 绑定某个shader
+     * @param shader
+     */
+    public static void bindShader(Shader shader) {
+        currentShader = shader;
+    }
+
+    /**
+     * 获得已绑定的shader
+     * @return
+     */
+    public static Shader getBoundShader() {
+        return currentShader;
     }
 
     /**
@@ -63,6 +80,7 @@ public class Renderer  {
      * 对所有的batch渲染
      */
     public void render() {
+        currentShader.use();
         for (RenderBatch batch : batches) {
             batch.render();
         }

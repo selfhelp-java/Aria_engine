@@ -16,12 +16,30 @@ public class Texture {
     private transient int texID;
     private int width, height;
 
+
+    public Texture() {
+        texID = -1;
+        width = -1;
+        height = -1;
+    }
+
+    public Texture(int width, int height) {
+        this.filepath = "Generated";
+
+        // Generate texture on GPU
+        texID = glGenTextures();
+        glBindTexture(GL_TEXTURE_2D, texID);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height,
+                0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+    }
     /**
      * 纹理初始化操作
      * @param filepath
      */
-
-
     public void init(String filepath) {
         this.filepath = filepath;
 
@@ -65,6 +83,13 @@ public class Texture {
     }
 
     /**
+     * 获得纹理的文件地址
+     * @return
+     */
+    public String getFilepath() {
+        return this.filepath;
+    }
+    /**
      * 纹理绑定
      */
     public void bind() {
@@ -100,6 +125,21 @@ public class Texture {
      */
     public int getId() {
         return texID;
+    }
+
+    /**
+     * 判断纹理是否相同
+     * @param o
+     * @return
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (o == null) return false;
+        if (!(o instanceof Texture)) return false;
+        Texture oTex = (Texture)o;
+        return oTex.getWidth() == this.width && oTex.getHeight() == this.height &&
+                oTex.getId() == this.texID &&
+                oTex.getFilepath().equals(this.filepath);
     }
 
 }

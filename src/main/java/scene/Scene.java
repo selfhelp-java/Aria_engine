@@ -16,20 +16,33 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public abstract class Scene {
     protected Renderer renderer = new Renderer();
     private boolean isRunning;
     protected Camera camera;
     protected List<GameObject> gameObjects = new ArrayList<>();
-    protected GameObject activeGameObject = null;
     protected boolean levelLoaded = false;
+    public abstract void render();
     public Scene(){
 
     }
      public void init(){
 
      }
+
+    /**
+     * 获得go
+     * @param gameObjectId
+     * @return
+     */
+    public GameObject getGameObject(int gameObjectId) {
+        Optional<GameObject> result = this.gameObjects.stream()
+                .filter(gameObject -> gameObject.getUid() == gameObjectId)
+                .findFirst();
+        return result.orElse(null);
+    }
 
     /**
      * 当前场景开始
@@ -66,16 +79,6 @@ public abstract class Scene {
     public Camera camera()
     {
         return this.camera;
-    }
-
-    public void sceneImgui(){
-        if(activeGameObject != null)
-        {
-            ImGui.begin("Inspector");
-            activeGameObject.imgui();
-            ImGui.end();
-        }
-        imgui();
     }
 
     public void imgui() {}
