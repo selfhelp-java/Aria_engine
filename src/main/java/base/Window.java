@@ -198,7 +198,7 @@ public class Window {
             this.imguiLayer.update(dt,currentScene);
 
             glfwSwapBuffers(glfwWindow);
-
+            MouseListener.endFrame();
             //一次loop的时间
             endTime = (float)glfwGetTime();
             dt = endTime - beginTime;
@@ -231,6 +231,10 @@ public class Window {
 
     public static float getTargetAspectRatio() {
         return 16.0f / 9.0f;
+    }
+
+    public static ImGuiLayer getImguiLayer() {
+        return get().imguiLayer;
     }
 
 }

@@ -24,7 +24,8 @@ public class Camera {
     public void adjustProjection() {
         projectionMatrix.identity();
         //生成正交投影矩阵
-        projectionMatrix.ortho(0.0f, projectionSize.x, 0.0f, projectionSize.y, 0.0f, 100.0f);
+        projectionMatrix.ortho(0.0f, projectionSize.x * this.zoom,
+                0.0f, projectionSize.y * zoom, 0.0f, 100.0f);
         projectionMatrix.invert(inverseProjection);
     }
 

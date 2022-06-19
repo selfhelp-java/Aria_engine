@@ -44,8 +44,12 @@ public class MouseListener {
      * 结束帧
      */
     public static void endFrame() {
-        get().scrollY = 0.0;
-        get().scrollX = 0.0;
+        get().scrollX = 0;
+        get().scrollY = 0;
+        get().lastX = get().xPos;
+        get().lastY = get().yPos;
+        get().lastWorldX = get().worldX;
+        get().lastWorldY = get().worldY;
     }
 
     public static void clear() {
@@ -89,6 +93,8 @@ public class MouseListener {
         get().lastWorldY = get().worldY;
         get().xPos = xpos;
         get().yPos = ypos;
+        calcOrthoX();
+        calcOrthoY();
     }
 
     /**
@@ -139,6 +145,10 @@ public class MouseListener {
     }
 
     public static float getOrthoX() {
+        return (float)get().worldX;
+    }
+
+    private static void calcOrthoX() {
         float currentX = getX() - get().gameViewportPos.x;
         currentX = (currentX / get().gameViewportSize.x) * 2.0f - 1.0f;
         Vector4f tmp = new Vector4f(currentX, 0, 0, 1);
@@ -147,12 +157,14 @@ public class MouseListener {
         Matrix4f viewProjection = new Matrix4f();
         camera.getInverseView().mul(camera.getInverseProjection(), viewProjection);
         tmp.mul(viewProjection);
-        currentX = tmp.x;
-
-        return currentX;
+        get().worldX = tmp.x;
     }
 
     public static float getOrthoY() {
+        return (float)get().worldY;
+    }
+
+    private static void calcOrthoY() {
         float currentY = getY() - get().gameViewportPos.y;
         currentY = -((currentY / get().gameViewportSize.y) * 2.0f - 1.0f);
         Vector4f tmp = new Vector4f(0, currentY, 0, 1);
@@ -161,9 +173,7 @@ public class MouseListener {
         Matrix4f viewProjection = new Matrix4f();
         camera.getInverseView().mul(camera.getInverseProjection(), viewProjection);
         tmp.mul(viewProjection);
-        currentY = tmp.y;
-
-        return currentY;
+        get().worldY = tmp.y;
     }
 
     public static float getX() {

@@ -5,7 +5,6 @@ import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
 
 /**
  * 键盘控制监听类
- * @author fhr
  */
 public class KeyListener {
     private static KeyListener instance;
